@@ -14,6 +14,10 @@ func NewServer() *Server {
 	}
 }
 
-func (s *Server) Routes() {
+func (s *Server) AddMiddleWares() {
+	s.Use(middleWare)
+}
+
+func (s *Server) AddRoutes() {
 	s.Handle("/", rootHandler())
 }
