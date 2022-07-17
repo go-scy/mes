@@ -1,4 +1,4 @@
-module github.com/samuelyang09191/mes
+module github.com/go-scy/mes
 
 go 1.18
 
