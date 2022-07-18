@@ -10,15 +10,15 @@ import (
 const portNumber = ":8080"
 
 func main() {
-	newServer := app.NewServer()
+	newServer := app.NewServer(nil)
 
 	// Register all handlers
 	newServer.AddRoutes()
 	newServer.AddMiddleWares()
-	//newServer.AddCsrfMiddleware()
+	newServer.AddCsrfMiddleware()
 
 	fmt.Println("start newServer listening on ", portNumber)
 
-	http.ListenAndServe(portNumber, newServer)
+	http.ListenAndServe(portNumber, newServer.Router())
 
 }

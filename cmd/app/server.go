@@ -9,26 +9,33 @@ const (
 	csrfKey = "csrf-auth-key"
 )
 
-type Server struct {
-	*mux.Router
+type server struct {
+	router *mux.Router
+	config *AppConfig
 }
 
-func NewServer() *Server {
-	return &Server{
+func NewServer(config *AppConfig) *server {
+	return &server{
 		mux.NewRouter(),
+		config,
 	}
 }
 
-func (s *Server) AddMiddleWares() {
-	s.Use(middleWare)
+func (s server) AddMiddleWares() {
+	s.router.Use(middleWare)
 }
 
-func (s *Server) AddCsrfMiddleware() {
+func (s server) AddCsrfMiddleware() {
 	csrfMiddleWare := csrf.Protect([]byte(csrfKey))
-	s.Use(csrfMiddleWare)
+	s.router.Use(csrfMiddleWare)
 }
 
-func (s *Server) AddRoutes() {
-	s.Handle("/", rootHandler())
-	s.Handle("/employee", employeeHandler())
+func (s server) AddRoutes() {
+	s.router.Handle("/", rootHandler())
+	s.router.Handle("/employee", employeeHandler())
+	s.router.Handle("/product", productHandler())
+}
+
+func (s server) Router() *mux.Router {
+	return s.router
 }
