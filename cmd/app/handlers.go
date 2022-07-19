@@ -3,7 +3,6 @@ package app
 import (
 	"fmt"
 	"github.com/gorilla/csrf"
-	"html/template"
 	"net/http"
 )
 
@@ -31,10 +30,16 @@ func productHandler() http.Handler {
 
 func rootHandler(config *AppConfig) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		parsedTemplate := template.Must(template.ParseFS(config.EmbeddedFiles, "templates/*"))
-		err := parsedTemplate.ExecuteTemplate(w, "index.gohtml", nil)
+		err := renderTemplates(w, config, "index.gohtml")
 		if err != nil {
 			http.Error(w, "cannot render template", http.StatusInternalServerError)
+			return
 		}
 	})
+}
+
+// Render files that are stored under "/templates" directory.
+func renderTemplates(w http.ResponseWriter, config *AppConfig, html string) error {
+	parsedTemplate := config.GetParsedTemplates("templates/" + html)
+	return parsedTemplate.Execute(w, nil)
 }
