@@ -31,7 +31,7 @@ func (s server) AddCsrfMiddleware() {
 }
 
 func (s server) AddRoutes() {
-	s.router.Handle("/", rootHandler())
+	s.router.Handle("/", rootHandler(s.config))
 	s.router.Handle("/employee", employeeHandler())
 	s.router.Handle("/product", productHandler())
 }
